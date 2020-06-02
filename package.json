@@ -1,0 +1,22 @@
+{
+  "name": "kmetrics",
+  "description": "Performance Measurement Sandbox",
+  "version": "1.0.0",
+  "private": true,
+  "main": "kmetrics.html",
+  "files": [
+    "kmetrics.js",
+    "kmetrics.html",
+    "README.md"
+  ],
+  "dependencies": {
+  },
+  "engines" : {
+    "kdx" : "*"
+  },
+  "kdx":{
+    "advanced" : true,
+    "name" : "kMetrics"
+	}
+
+}

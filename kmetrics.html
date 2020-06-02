@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>kMetrics</title>
+	<meta charset="utf-8">
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+	<link rel="stylesheet" type="text/css" href="/resources/extern/fonts/fontawesome/css/all.min.css" />
+	<link rel="stylesheet" type="text/css" href="/node_modules/@aspectron/flow-ux/flow-ux.css" />
+	<link rel="stylesheet" type="text/css" href="/resources/styles/kdx.css">
+	<script type="importmap">
+		{
+			"imports":{
+				"lit-html":"/node_modules/lit-html/lit-html.js",
+				"lit-html/lit-html.js":"/node_modules/lit-html/lit-html.js",
+				"lit-html/lib/shady-render.js":"/node_modules/lit-html/lib/shady-render.js",
+				"lit-element":"/node_modules/lit-element/lit-element.js",
+				"lit-html/directives/if-defined.js":"/node_modules/lit-html/directives/if-defined.js",
+				"lit-html/directives/repeat.js":"/node_modules/lit-html/directives/repeat.js"
+			}
+		}
+	</script>
+	<script src="/node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+
+	<script type="text/javascript">
+		var flowConfig = {
+			iconsPath:'/resources/extern/fonts/fontawesome/sprites/light.svg',
+			icons:{
+				'language':'/node_modules/flow-ux/resources/images/icons.svg#language'
+			}
+		}
+	</script>
+
+	<script type="module" src="/node_modules/@aspectron/flow-ux/flow-ux.js"></script>
+	<script type="module" src="/node_modules/@aspectron/flow-ux/src/flow-terminal.js"></script>
+
+	<script src="/resources/extern/d3/d3.js"></script>
+	<!-- include non-module-type jquery -->
+	<script src="/resources/extern/scripts/jquery-3.1.1.normal.js"></script>
+	<!-- install xterm, xterm-addon-fit, xterm-addon-web-links node-modules -->
+	<!-- <script type="module" src="/node_modules/@aspectron/flow-ux/src/flow-terminal.js"></script> -->
+	<style type="text/css">
+		body{padding:10px; overflow-y: scroll; }
+		/* .tools{padding:10px 0px; text-align:right} */
+		h1,h2,h3,h4,h5 { font-weight: normal; }
+
+		flow-graph, flow-data-badge-graph {
+			width: 49%;
+			height: 120px;
+		}
+
+		flow-terminal#txgen {
+			width: 100%;
+			height: 500px;
+			border: 1px solid #888;
+			display:block;
+		}
+		.metrics .wrapper { padding: 4px; white-space: nowrap; }
+		.metrics .caption { color: #333; }
+		.metrics .value { display: inline-block; min-width: 48px; margin-left: 8px; /*border:1px solid red;*/ }
+		.metrics :nth-child(0) { min-width: 96px; }
+
+		.toolbar { padding: 4px; display: flex; flex-direction: row; }
+		.toolbar flow-btn { margin: 4px; }
+
+		.txgen { display: flex; flex-direction: row; }
+		[flex] { flex: 1; }
+		
+	</style>
+</head>
+<body>
+
+	<flow-expandable no-info class="metrics" expand>
+		<div slot="title" caption>METRICS</div>
+		<div id='metrics'></div>
+
+		<br/>
+
+		<flow-graph overlay precision="2" id="tps-avg" sampler="tpsavg" title="TPS Average"></flow-graph>
+		<flow-graph overlay precision="2" id="tps-last" sampler="tpslast" title="TPS Last (Spot)"></flow-graph>
+		<flow-graph overlay id="queue" sampler="queue" title="Block Queue"></flow-graph>
+		<flow-graph overlay id="blocks" sampler="blocks" title="Blocks" ></flow-graph>
+		<flow-graph overlay id="transactions" sampler="transactions" title="Transactions" ></flow-graph>
+
+		<flow-graph overlay id="txfetchdelta" sampler="txfetchdelta" title="Kasparov /TRANSACTIONS/BLOCK/ Fetch Duration" suffix="msec"></flow-graph>
+		<flow-graph overlay id="txfetchdelta-avg" sampler="txfetchdelta-avg" title="Kasparov /TRANSACTIONS/BLOCK/ Fetch Duration Average" suffix="msec"></flow-graph>
+	</flow-expandable>
+		
+	<flow-expandable no-info class="txgen" expand>
+		<div slot="title" caption>TX GENERATOR</div>
+		<div class="toolbar">
+			<div flex></div>
+			<flow-btn id="run-txgen">Run TxGen</flow-btn>
+			<flow-btn id="stop-txgen">Stop TxGen</flow-btn>
+		</div>
+		<div><flow-textarea id="txgen-args" type="text"></flow-textarea></div>
+		<flow-terminal id="txgen" font-size="10px" xfont-family="Source Code Pro"></flow-terminal>
+
+		<!-- flow-data-badge-graph id="tps-avg" sampler="tpsavg" title="TPS Average"></flow-data-badge-graph -->
+
+		<!--
+		<h4 slot="info" class="title"><flow-i18n>TPS Metrics</flow-i18n></h4>
+		<p slot="info" is="i18n-p">
+			Lorem Ipsum
+		</p>
+		-->
+	</flow-expandable>
+
+	<script type="module">
+		import './kmetrics.js';
+	</script>
+</body>
+</html>
