@@ -34,6 +34,7 @@
 	<script type="module" src="/node_modules/@aspectron/flow-ux/src/flow-terminal.js"></script>
 
 	<script src="/resources/extern/d3/d3.js"></script>
+	<script src="/resources/extern/d3/d3-array.v2.min.js"></script>
 	<!-- include non-module-type jquery -->
 	<script src="/resources/extern/scripts/jquery-3.1.1.normal.js"></script>
 	<!-- install xterm, xterm-addon-fit, xterm-addon-web-links node-modules -->
@@ -75,10 +76,10 @@
 
 		<br/>
 
-		<flow-graph overlay precision="2" id="tps-avg" sampler="tpsavg" title="TPS Average"></flow-graph>
+		<flow-graph overlay axes info precision="2" id="tps-avg" sampler="tpsavg" title="TPS Average"></flow-graph>
 		<flow-graph overlay precision="2" id="tps-last" sampler="tpslast" title="TPS Last (Spot)"></flow-graph>
 		<flow-graph overlay id="queue" sampler="queue" title="Block Queue"></flow-graph>
-		<flow-graph overlay id="blocks" sampler="blocks" title="Blocks" ></flow-graph>
+		<flow-graph overlay info id="blocks" sampler="blocks" title="Blocks" ></flow-graph>
 		<flow-graph overlay id="transactions" sampler="transactions" title="Transactions" ></flow-graph>
 
 		<flow-graph overlay id="txfetchdelta" sampler="txfetchdelta" title="Kasparov /TRANSACTIONS/BLOCK/ Fetch Duration" suffix="msec"></flow-graph>
