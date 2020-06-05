@@ -59,7 +59,7 @@ class KMetricsSandbox extends Applet {
 		Object.entries(modules).forEach(([k,v]) => {
 			try {
 				let [type,id] = k.split(':');
-				console.log('getPorts processing',k,v);
+				//console.log('getPorts processing',k,v);
 				let port = null;
 				if(/^kaspad/i.test(type)) {				
 				} else if(/^kasparovd/i.test(type)) {
@@ -76,7 +76,7 @@ class KMetricsSandbox extends Applet {
 				console.log('error while processing application config',ex);
 			}
 		})
-console.log('getPorts produced:',cfg);
+		//console.log('getPorts produced:',cfg);
 		return cfg;
 	}
 
@@ -218,7 +218,7 @@ console.log('getPorts produced:',cfg);
 //		console.log("RUN RUNNING");
 
 		let count = await (new Poller().fetch(`${this.url}/blocks/count`));
-		console.log("got count:",count)
+		//console.log("got count:",count)
 		this.skip = count;
 
 		let blocks = new Poller();
@@ -252,10 +252,10 @@ console.log('getPorts produced:',cfg);
 
 	async fetchTransactions() {
 		while(this.blockHashes.length) {
-			console.log("pending queue:",this.blockHashes.length);
+			//console.log("pending queue:",this.blockHashes.length);
 			//console.log("blockHashes",JSON.stringify(this.blockHashes,null,'\t'));
 			let hash = this.blockHashes.shift();
-			console.log("TX [REQ]",hash);
+			//console.log("TX [REQ]",hash);
 			let ts = Date.now();
 
 			try {
@@ -269,7 +269,7 @@ console.log('getPorts produced:',cfg);
 				while(this.samples.transactions_fetch_tsδAvg.length > 10)
 					this.samples.transactions_fetch_tsδAvg.shift();
 				this.accumulator += list.transactions.length;
-				console.log("TX [RESP]",list.transactions.length, 'for', hash,'--->',ts_req_delta,'msec');
+				//console.log("TX [RESP]",list.transactions.length, 'for', hash,'--->',ts_req_delta,'msec');
 			} catch(ex) {
 				console.log("TX [ERROR]",'for', hash);
 				console.error(ex);
