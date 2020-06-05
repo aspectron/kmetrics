@@ -16,7 +16,7 @@
   },
   "kdx":{
     "advanced" : true,
-    "name" : "kMetrics"
-	}
-
+    "name" : "kMetrics",
+    "frame" : false
+  }
 }

@@ -27,6 +27,27 @@ class KMetricsSandbox extends Applet {
 			transactions_fetch_tsδAvg : []
 		}
 
+		// this.initCaption();
+	}
+
+	initCaption() {
+		let caption = document.querySelector('flow-caption-bar');
+		this.caption = caption;
+		this.caption.close = this.closeWin;
+		this.caption.logo = `/resources/images/kaspa-logo-${this.theme}-bg.png`;
+
+		// caption.version = pkg.version;
+
+		caption.tabs = [{
+			title : "Metrics".toUpperCase(),
+			id : "metrics",
+			cls: "metrics"
+		},{
+			title : "TxGen".toUpperCase(),
+			id : "txgen"
+		}];
+
+		caption["active"] = "metrics";
 	}
 
 	getPorts(modules) {
@@ -96,7 +117,7 @@ console.log('getPorts produced:',cfg);
 		})
 
 
-		this.el = document.querySelector('#metrics');
+		this.el = document.querySelector('#summary');
 		console.log("GOT CONFIG:",config);
 		// el.innerHTML = `Hello TPS World!<br/><flow-code><textarea>${JSON.stringify(config,null,'  ')}</textarea></flow-code>`;
 

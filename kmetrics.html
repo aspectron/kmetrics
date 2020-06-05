@@ -30,6 +30,17 @@
 		}
 	</script>
 
+	<script type="text/javascript">
+		var flowConfig = {
+			theme:{
+				iconPath:'/resources/extern/fonts/fontawesome/sprites/',
+				iconFile:'light',
+				icons:{
+					language:'icons:language'
+				}
+			}
+		}
+	</script>
 	<script type="module" src="/node_modules/@aspectron/flow-ux/flow-ux.js"></script>
 	<script type="module" src="/node_modules/@aspectron/flow-ux/src/flow-terminal.js"></script>
 
@@ -45,7 +56,8 @@
 
 		flow-graph, flow-data-badge-graph {
 			width: 49%;
-			height: 120px;
+			height: 160px;
+			margin: 10px 0px;
 		}
 
 		flow-terminal#txgen {
@@ -68,42 +80,49 @@
 	</style>
 </head>
 <body>
+	<!-- <flow-caption-bar 
+		__logo="/resources/images/k-subtract.svg"
+		logo="/resources/images/kaspa-logo-light-bg.png" 
+		xicon="fal fa-chart-network">kMetrics</flow-caption-bar>
+	<tab-content for="metrics"> -->
 
-	<flow-expandable no-info class="metrics" expand>
-		<div slot="title" caption>METRICS</div>
-		<div id='metrics'></div>
+		<flow-expandable no-info class="metrics" expand>
+			<div slot="title" caption>METRICS</div>
+			<div id='summary'></div>
 
-		<br/>
+			<br/>
 
-		<flow-graph overlay precision="2" id="tps-avg" sampler="tpsavg" title="TPS Average"></flow-graph>
-		<flow-graph overlay precision="2" id="tps-last" sampler="tpslast" title="TPS Last (Spot)"></flow-graph>
-		<flow-graph overlay id="queue" sampler="queue" title="Block Queue"></flow-graph>
-		<flow-graph overlay id="blocks" sampler="blocks" title="Blocks" ></flow-graph>
-		<flow-graph overlay id="transactions" sampler="transactions" title="Transactions" ></flow-graph>
+			<flow-graph overlay axes info precision="2" id="tps-avg" sampler="tpsavg" title="TPS Average"></flow-graph>
+			<flow-graph overlay axes info precision="2" id="tps-last" sampler="tpslast" title="TPS Last (Spot)"></flow-graph>
+			<flow-graph overlay axes info id="queue" sampler="queue" title="Block Queue"></flow-graph>
+			<flow-graph overlay axes info id="blocks" sampler="blocks" format="commas" title="Blocks" ></flow-graph>
+			<flow-graph overlay axes info id="transactions" sampler="transactions" format="commas" title="Transactions" ></flow-graph>
 
-		<flow-graph overlay id="txfetchdelta" sampler="txfetchdelta" title="Kasparov /TRANSACTIONS/BLOCK/ Fetch Duration" suffix="msec"></flow-graph>
-		<flow-graph overlay id="txfetchdelta-avg" sampler="txfetchdelta-avg" title="Kasparov /TRANSACTIONS/BLOCK/ Fetch Duration Average" suffix="msec"></flow-graph>
-	</flow-expandable>
-		
-	<flow-expandable no-info class="txgen" expand>
-		<div slot="title" caption>TX GENERATOR</div>
-		<div class="toolbar">
-			<div flex></div>
-			<flow-btn id="run-txgen">Run TxGen</flow-btn>
-			<flow-btn id="stop-txgen">Stop TxGen</flow-btn>
-		</div>
-		<div><flow-textarea id="txgen-args" type="text"></flow-textarea></div>
-		<flow-terminal id="txgen" font-size="10px" xfont-family="Source Code Pro"></flow-terminal>
+			<flow-graph overlay axes info format="commas" id="txfetchdelta" sampler="txfetchdelta" title="Kasparov /TRANSACTIONS/BLOCK/ Fetch Duration" suffix="msec"></flow-graph>
+			<flow-graph overlay axes info format="commas" id="txfetchdelta-avg" sampler="txfetchdelta-avg" title="Kasparov /TRANSACTIONS/BLOCK/ Fetch Duration Average" suffix="msec"></flow-graph>
+		</flow-expandable>
+	<!-- </tab-content>
+	<tab-content for="txgen"> -->
+		<flow-expandable no-info class="txgen" expand>
+			<div slot="title" caption>TX GENERATOR</div>
+			<div class="toolbar">
+				<div flex></div>
+				<flow-btn id="run-txgen">Run TxGen</flow-btn>
+				<flow-btn id="stop-txgen">Stop TxGen</flow-btn>
+			</div>
+			<div><flow-textarea id="txgen-args" type="text"></flow-textarea></div>
+			<flow-terminal id="txgen" font-size="10px" xfont-family="Source Code Pro"></flow-terminal>
 
-		<!-- flow-data-badge-graph id="tps-avg" sampler="tpsavg" title="TPS Average"></flow-data-badge-graph -->
+			<!-- flow-data-badge-graph id="tps-avg" sampler="tpsavg" title="TPS Average"></flow-data-badge-graph -->
 
-		<!--
-		<h4 slot="info" class="title"><flow-i18n>TPS Metrics</flow-i18n></h4>
-		<p slot="info" is="i18n-p">
-			Lorem Ipsum
-		</p>
-		-->
-	</flow-expandable>
+			<!--
+			<h4 slot="info" class="title"><flow-i18n>TPS Metrics</flow-i18n></h4>
+			<p slot="info" is="i18n-p">
+				Lorem Ipsum
+			</p>
+			-->
+		</flow-expandable>
+	<!-- </tab-content> -->
 
 	<script type="module">
 		import './kmetrics.js';
