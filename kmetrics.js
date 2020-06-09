@@ -1,4 +1,5 @@
-// true && nw.Window.get().showDevTools();
+false && (window.navigator.plugins.namedItem('Native Client') !== null) 
+	&& nw.Window.get().showDevTools();
 const path = require('path');
 const { Applet } = require('@aspectron/flow-app');
 const { dpc } = require('@aspectron/flow-async');
