@@ -1,4 +1,4 @@
-true && nw.Window.get().showDevTools();
+// true && nw.Window.get().showDevTools();
 const path = require('path');
 const { Applet } = require('@aspectron/flow-app');
 const { dpc } = require('@aspectron/flow-async');
@@ -10,8 +10,6 @@ const FETCH = nodeFetch; // window.fetch seems to have timing issues
 
 import {html, render} from 'lit-html';
 import {FlowSampler, flow} from '/node_modules/@aspectron/flow-ux/flow-ux.js';
-//import {flow} from '/node_modules/@aspectron/flow-ux/src/base-element.js';
-
 
 class KMetricsSandbox extends Applet {
 
@@ -26,7 +24,6 @@ class KMetricsSandbox extends Applet {
 			tpsAvg : [],
 			transactions_fetch_tsδAvg : []
 		}
-
 		// this.initCaption();
 	}
 
@@ -35,9 +32,7 @@ class KMetricsSandbox extends Applet {
 		this.caption = caption;
 		this.caption.close = this.closeWin;
 		this.caption.logo = `/resources/images/kaspa-logo-${this.theme}-bg.png`;
-
 		// caption.version = pkg.version;
-
 		caption.tabs = [{
 			title : "Metrics".toUpperCase(),
 			id : "metrics",
@@ -46,7 +41,6 @@ class KMetricsSandbox extends Applet {
 			title : "TxGen".toUpperCase(),
 			id : "txgen"
 		}];
-
 		caption["active"] = "metrics";
 	}
 
@@ -81,9 +75,7 @@ class KMetricsSandbox extends Applet {
 	}
 
 	async main(config) {
-//		let kasparovd = Object.entries(config.modules).map(([k,v]) => { return /^kasparovd/i.test(k) ? v : null }).filter(v=>v).shift();
 
-// TODO - CONVERT TO CONFIG EXTRACTION FUNCTION...
 		let default_txgen_args = `--private-key=Bp9PjGHzRTM3yzQbsi5iDJLT5ZLUfessFMKMUJkiTow9
 --secondary-address=kaspatest:qpa8dnj0uw6jchdjyffx0200t5e0zhmvgul754z879
 --num-outputs=1
@@ -94,12 +86,9 @@ class KMetricsSandbox extends Applet {
 --tx-interval=1000
 --testnet`;//.replace(/\s\s+/g,' ');
 
-		// 
 		this.ports = this.getPorts(config.modules);
-
 		this.txgenArgs = document.querySelector('#txgen-args');
 		this.txgenArgs.set(default_txgen_args);
-
 		this.terminal = document.querySelector('#txgen');
 		// console.log("TPS - Got Terminal", this.terminal);
 		this.txgen = new TxGen(this,this.terminal);
@@ -116,39 +105,16 @@ class KMetricsSandbox extends Applet {
 			this.txgen.stop();
 		})
 
-
 		this.el = document.querySelector('#summary');
 		console.log("GOT CONFIG:",config);
-		// el.innerHTML = `Hello TPS World!<br/><flow-code><textarea>${JSON.stringify(config,null,'  ')}</textarea></flow-code>`;
-
-// TODO - get MQTT port
-// Supply both to TXGEN
-
-		// let kasparovd = Object.entries(config.modules).map(([k,v]) => { return /^kasparovd/i.test(k) ? v : null }).filter(v=>v).shift();
-		// console.log("GOT KASPAROVD:", kasparovd);
-		// let listen = kasparovd?.args?.listen || '';
-		//let port = parseInt(listen.split(':').pop());
-
-//		this.url = `http://${listen}`;
 
 		this.url = `http://localhost:${this.ports.types.kasparovd}`;
-
 		this.skip = 0;
-
-		//el.innerHTML = `Hello TPS World![${listen}]<br/><flow-code><textarea>${JSON.stringify(config,null,'  ')}</textarea></flow-code>`;
-
-		//this.fetch_ = createInterval(this.fetch.bind(this));
 		this.el.innerHTML = 'Conneting...';
-		//this.skip = await this.count();
-		//this.el.innerHTML = `skip: ${this.skip}`;
 
 		dpc(() => { this.run(); })
 		dpc(() => { this.fetchTransactions(); })
-		//return this.run();
 
-		// let tpsavg = document.querySelector('#tps-avg');
-		// console.log('tpsavg:',tpsavg);
-		// tpsavg.data = this.samples.tpsAvg;
 
 		this.lastTS = Date.now();
 		this.interval = setInterval(()=>{
@@ -182,15 +148,6 @@ class KMetricsSandbox extends Applet {
 				flow.samplers.get('tpslast').put(this.tpsLast);
 				flow.samplers.get('queue').put(this.blockHashes.length);
 			}
-			// else {
-			// 	console.log('ignoring', this.tpsAvg);
-
-			// }
-			//FlowSampler.get('tpsavg').put({ts, value:this.tpsAvg});
-
-			// /this.samples.tpsAvg.push(this.tpsAvg);
-			// while(this.samples.tpsAvg.length > 300)
-			// 	this.samples.tpsAvg.shift();
 
 			const o = {
 				"Position" : this.skip,
@@ -203,31 +160,24 @@ class KMetricsSandbox extends Applet {
 			}
 
 			this.el.innerHTML = 
-			
 				Object.entries(o).map(([k,v]) => {
 					return `<span class='wrapper'><span class='caption'>${k}:</span><span class='value'>${v}</span></span>`;
 				}).join('');
-
-
 		},1000);
 
 		return Promise.resolve();
 	}
 
 	async run() {
-//		console.log("RUN RUNNING");
 
 		let count = await (new Poller().fetch(`${this.url}/blocks/count`));
-		//console.log("got count:",count)
 		this.skip = count;
 
 		let blocks = new Poller();
 		let ts = Date.now();
 		blocks.poll(()=>{
 			return `${this.url}/blocks?skip=${this.skip}`;
-
 		}, (err, blockHashes) => {
-			// console.log("I am in run poller return, err, bh:",err,blockHashes);
 			if(err) {
 				dpc(()=>{
 					this.run();
@@ -244,7 +194,6 @@ class KMetricsSandbox extends Applet {
 				return 0;
 			}
 			else {
-				//console.log("I am in run poller ... returning 1e4");
 				return 3e3;
 			}
 		})
@@ -252,10 +201,7 @@ class KMetricsSandbox extends Applet {
 
 	async fetchTransactions() {
 		while(this.blockHashes.length) {
-			//console.log("pending queue:",this.blockHashes.length);
-			//console.log("blockHashes",JSON.stringify(this.blockHashes,null,'\t'));
 			let hash = this.blockHashes.shift();
-			//console.log("TX [REQ]",hash);
 			let ts = Date.now();
 
 			try {
@@ -264,7 +210,6 @@ class KMetricsSandbox extends Applet {
 				let ts_req_delta = Date.now() - ts;
 				let list = (await resp.json()) || [];
 				let tsδ = Date.now() - ts;
-				// this.last_tsδ = tsδ;
 				this.samples.transactions_fetch_tsδAvg.push(tsδ);
 				while(this.samples.transactions_fetch_tsδAvg.length > 10)
 					this.samples.transactions_fetch_tsδAvg.shift();
@@ -274,14 +219,6 @@ class KMetricsSandbox extends Applet {
 				console.log("TX [ERROR]",'for', hash);
 				console.error(ex);
 			}
-			//console.log("TX URL:",`${this.url}/transactions/block/${hash}`);
-			//console.log("LIST:",list);
-			// this.tpsLast = this.tps.length ? this.tps[this.tps.length-1] : 0;
-			// this.tpsAvg = this.tps.reduce((a,b) => a+b, 0) / this.tps.length;
-			// this.el.innerHTML = `skip: ${this.skip}, tx: ${this.acc},
-			
-			// tps: ${tpsLast.toFixed(2)} tpsAvg: ${tpsAvg.toFixed(2)}
-			// queue: ${this.blockHashes.length}`;
 		}
 
 		this.txfetch_dpc = dpc(3e3, () => {
@@ -289,53 +226,11 @@ class KMetricsSandbox extends Applet {
 		})
 	}
 
-
-	// 	fetch(`${this.url}/blocks/count`).then()
-	// 	let count = 0;
-	// 	try {
-	// 		let resp = 0;
-	// 		count = parseInt((await this.fetch(`${this.url}/blocks/count`)).json());
-	// 	} catch(ex) {
-	// 		count = 0;
-	// 	}
-	// }
-
-	// async fetch() {
-
-	// 	await fetch(`this.url/blocks`)
-
-
-
-	// 	dpc(() => {
-	// 		this.fetch();
-	// 	})
-	// }
-
-
-
 	async shutdown() {
 		clearTimeout(this.txfetch)
 		Poller.shutdown();
 	}
-
-	// createInter
-
-
-
-	/*
-
-	fetch blocks
-	fetch transactions for all blocks
-	count
-	average
-	update graph
-
-	*/
-
-
-
 }
-
 
 class Poller {
 
@@ -416,14 +311,7 @@ class Poller {
 
 }
 
-// TODO - MQTT ADDRESS
-// TX INTERVAL
-
-// STRINGS? PROCESSING - CONFIG/PORT EXTRACTION FUNCTIONS..
-
 /*
-
-Error parsing command-line arguments: Usage:
   txgen [OPTIONS]
 
 Application Options:
@@ -477,12 +365,6 @@ class TxGen {
 			"tx-interval" : 1000,
 			"testnet" : undefined,
 		}
-
-//		let args = { };
-
-
-
-
 	}
 
 	start() {
@@ -499,8 +381,7 @@ class TxGen {
 		let str = this.app.txgenArgs.get();
 		str = str.replace(/\r|\n/g,' ').replace(/\s\s+/g,' ').trim();
 		let defaults = str.split(' ');
-		console.log('TXGEN defaults:', defaults);
-
+		// console.log('TXGEN defaults:', defaults);
 
 		args = Object.entries(args).map((o) => {
 			const [k,v] = o;
@@ -510,9 +391,8 @@ class TxGen {
 		args = args.map((p) => {
 			return (p.v === undefined ? `--${p.k}` : `--${p.k}=${p.v}`);
 		}).concat(defaults);
-		console.log('spawn args:',args);
-		console.log('spawn args:',args.join(' '));
-console.log("starting this.bin:", this.bin);
+		// console.log('spawn args:',args.join(' '));
+		// console.log("starting this.bin:", this.bin);
 
 		this.app.terminal.write(args.join(' ')+'\r\n');
         utils.spawn(this.bin, args, {
@@ -521,7 +401,6 @@ console.log("starting this.bin:", this.bin);
 				this.terminal.term.write(data.toString().replace(/\n/g,'\r\n')); 
 				return data; 
 			},
-//            ...opts
         }, (proc) => {
 			this.proc = proc;
 		}).then((code) => {
