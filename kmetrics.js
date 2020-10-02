@@ -77,8 +77,8 @@ class KMetricsSandbox extends Applet {
 
 	async main(config) {
 
-		let default_txgen_args = `--private-key=bc2c98f7067446921a6759f94166347461d5f430af14c88dc24304351d2bccff
---secondary-address=kaspatest:qpjmmd8fc20c6mf5zxr6qax0369g0aufyg6aqcel9u
+		let default_txgen_args = `--private-key=78747df1a3f296a1d41afc89d7e795dfe593f1765f2d5db70da3f02a63be1c6e
+--secondary-address=kaspatest:qrjtaaaryx3ngg48p888e52fd6e7u4epjvh46p7rqz
 --num-outputs=1
 --num-inputs=1
 --payload-size=20
@@ -129,7 +129,7 @@ class KMetricsSandbox extends Applet {
 			while(this.tps.length > this.tpsSamples)
 				this.tps.shift();
 
-			flow.samplers.get('txaccumulator').put(this.accumulator || 0);
+			flow.samplers.get('transactions').put(this.accumulator || 0);
 
 			this.tpsLast = this.tps.length ? this.tps[this.tps.length-1].v : 0;
 			let tdelta = ts - this.tps[0].ts;
@@ -177,7 +177,9 @@ class KMetricsSandbox extends Applet {
 		let blocks = new Poller();
 		let ts = Date.now();
 		blocks.poll(()=>{
-			return `${this.url}/blocks?skip=${this.skip}`;
+			let url = `${this.url}/blocks?order=asc&skip=${this.skip}`;
+			console.log(url);
+			return url;
 		}, (err, blockHashes) => {
 			if(err) {
 				dpc(()=>{
@@ -188,7 +190,7 @@ class KMetricsSandbox extends Applet {
 
 			let tsδ = Date.now() - ts;
 			// this.lastBlockFetch
-			
+			console.log('blockHashes:',blockHashes);
 			if(blockHashes.length) {
 				this.skip += blockHashes.length;
 				this.blockHashes = this.blockHashes.concat(blockHashes.map(bh=>bh.blockHash));
@@ -204,7 +206,7 @@ class KMetricsSandbox extends Applet {
 		while(this.blockHashes.length) {
 			let hash = this.blockHashes.shift();
 			let ts = Date.now();
-
+console.log(this.blockHashes.length, hash);
 			try {
 				let ts = Date.now();
 				let resp = await FETCH(`${this.url}/transactions/block/${hash}`);
@@ -265,11 +267,12 @@ class Poller {
 		//console.log('fetch ->:',url);
 		this.abort_ = false;
 		return new Promise((resolve, reject) => {
-
+			
+			const url_ = typeof url == 'function' ? url() : url;
+			console.log('fetching got url',url_);
 			const poller = () => {
 				delete this.dpc_;
-				const url_ = typeof url == 'function' ? url() : url;
-				//console.log('fetcher ->:',url_);
+				console.log('fetcher ->:',url_);
 				FETCH(url_)
 				.then(async (resp) => {
 					let v = await resp.json();
@@ -281,7 +284,7 @@ class Poller {
 					resolve(v);
 				})
 				.catch(err => {
-					//console.log("fetch for error",err);
+					console.log("fetch error", err);
 					if(!this.abort_)
 						this.dpc_ = dpc(wait,poller);
 				});
