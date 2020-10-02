@@ -77,8 +77,8 @@ class KMetricsSandbox extends Applet {
 
 	async main(config) {
 
-		let default_txgen_args = `--private-key=Bp9PjGHzRTM3yzQbsi5iDJLT5ZLUfessFMKMUJkiTow9
---secondary-address=kaspatest:qpa8dnj0uw6jchdjyffx0200t5e0zhmvgul754z879
+		let default_txgen_args = `--private-key=bc2c98f7067446921a6759f94166347461d5f430af14c88dc24304351d2bccff
+--secondary-address=kaspatest:qpjmmd8fc20c6mf5zxr6qax0369g0aufyg6aqcel9u
 --num-outputs=1
 --num-inputs=1
 --payload-size=20
@@ -187,7 +187,7 @@ class KMetricsSandbox extends Applet {
 			}
 
 			let tsδ = Date.now() - ts;
-			this.lastBlockFetch
+			// this.lastBlockFetch
 			
 			if(blockHashes.length) {
 				this.skip += blockHashes.length;
@@ -209,12 +209,17 @@ class KMetricsSandbox extends Applet {
 				let ts = Date.now();
 				let resp = await FETCH(`${this.url}/transactions/block/${hash}`);
 				let ts_req_delta = Date.now() - ts;
-				let list = (await resp.json()) || [];
+				let transactions = (await resp.json())?.transactions || [];
 				let tsδ = Date.now() - ts;
 				this.samples.transactions_fetch_tsδAvg.push(tsδ);
 				while(this.samples.transactions_fetch_tsδAvg.length > 10)
 					this.samples.transactions_fetch_tsδAvg.shift();
-				this.accumulator += list.transactions.length;
+				this.accumulator += transactions.length;
+				console.log(`${this.url}/transactions/block/${hash}`);
+				console.log('resp:',resp);
+				console.log('list:',transactions.length,transactions);
+				console.log(this.accumulator);
+				
 				//console.log("TX [RESP]",list.transactions.length, 'for', hash,'--->',ts_req_delta,'msec');
 			} catch(ex) {
 				console.log("TX [ERROR]",'for', hash);
@@ -351,13 +356,13 @@ class TxGen {
 		this.bin = path.join(app.binFolder,'txgen'+(/^windows/.test(utils.platform) ? '.exe' : ''));
 		this.defaults_DEPRECATED = {
 			// address="127.0.0.1:18334"
-			//"private-key" : pkbs58, // "32396163626339626538656238333830623863343733333434376538396562653064333233646466353366316261653834383834326664343731646539373039",
-			"private-key" : "Bp9PjGHzRTM3yzQbsi5iDJLT5ZLUfessFMKMUJkiTow9",
+			//"private-key" : "32396163626339626538656238333830623863343733333434376538396562653064333233646466353366316261653834383834326664343731646539373039",
+			"private-key" : "bc2c98f7067446921a6759f94166347461d5f430af14c88dc24304351d2bccff",
 			// # Private key for secondary address (base-58): 3LXQz6JPpyeJmA4qEDur2pt4e9NKBW4LJMRCpMv2tuQU
 			// # Private key for secondary address (hex): 22b7cc43843f0311916c2f5e0b91562ea0fac1c0bd7eef0734803a9915bbbb49
 			// - "--secondary-address=kaspatest:qpa8dnj0uw6jchdjyffx0200t5e0zhmvgul754z879"			
 			//"secondary-address" : "kaspa:qqg767gkznmsuah5xeer9f72lwqu642nqvlmujtpmk",
-			"secondary-address" : "kaspatest:qpa8dnj0uw6jchdjyffx0200t5e0zhmvgul754z879",
+			"secondary-address" : "kaspatest:qpjmmd8fc20c6mf5zxr6qax0369g0aufyg6aqcel9u",
 			"num-outputs": 1,
 			"num-inputs": 1,
 			"payload-size": 20,
