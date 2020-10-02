@@ -206,7 +206,7 @@ class KMetricsSandbox extends Applet {
 		while(this.blockHashes.length) {
 			let hash = this.blockHashes.shift();
 			let ts = Date.now();
-console.log(this.blockHashes.length, hash);
+			// console.log(this.blockHashes.length, hash);
 			try {
 				let ts = Date.now();
 				let resp = await FETCH(`${this.url}/transactions/block/${hash}`);
