@@ -45,6 +45,7 @@ class KMetricsSandbox extends Applet {
 		caption["active"] = "metrics";
 	}
 
+	// extract ports from the module configuration
 	getPorts(modules) {
 		let cfg = {
 			types : { },
@@ -75,7 +76,11 @@ class KMetricsSandbox extends Applet {
 		return cfg;
 	}
 
+	// Applet::main(config) is executed on Applet startup
+	// The config is supplied from the KDX configuration data
+	// available for editing in the KDX UI. 
 	async main(config) {
+		console.log("Application Config:",config);
 
 		let default_txgen_args = `--private-key=78747df1a3f296a1d41afc89d7e795dfe593f1765f2d5db70da3f02a63be1c6e
 --secondary-address=kaspatest:qrjtaaaryx3ngg48p888e52fd6e7u4epjvh46p7rqz
@@ -107,11 +112,10 @@ class KMetricsSandbox extends Applet {
 		})
 
 		this.el = document.querySelector('#summary');
-		console.log("GOT CONFIG:",config);
 
 		this.url = `http://localhost:${this.ports.types.kasparovd}`;
 		this.skip = 0;
-		this.el.innerHTML = 'Conneting...';
+		this.el.innerHTML = 'Connecting...';
 
 		dpc(() => { this.run(); })
 		dpc(() => { this.fetchTransactions(); })
